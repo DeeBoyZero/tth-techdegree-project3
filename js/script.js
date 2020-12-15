@@ -29,10 +29,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     shirtDesign.addEventListener('change', (e) => {
         shirtColor.disabled = false;
-        
-        if ( e.target.value === "js puns" ) {
-            
-        }
+        // const regex = /^([a-zA-Z\s?]+)/g;
+        const regex = /^([^\(]+)/g
+
+            for (let i = 1; i < shirtColor.length; i++) {
+    
+                if (shirtColor.options[i].dataset.theme !== e.target.value ) {
+                    shirtColor.options[i].hidden = true;
+                } else {
+                    shirtColor.options[i].hidden = false;
+                }
+                let newTxt = shirtColor.options[i].text.match(regex);
+                shirtColor.options[i].text= newTxt[0];
+            }
+            if ( e.target.value === 'js puns') {
+                shirtColor.options[1].selected = true;
+            } else if ( e.target.value === 'heart js' ) {
+                shirtColor.options[4].selected = true;
+            }
+          
     });
 
 
