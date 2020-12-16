@@ -5,6 +5,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const jobRole = document.querySelector('#title');
     const shirtColor = document.querySelector('#color');
     const shirtDesign = document.querySelector('#design');
+    const activities = document.querySelector('#activities');
+    const totalCost = document.querySelector('#activities-cost');
+    const paymentMethod = document.querySelector('#payment');
+    const paypalDiv = document.querySelector('#paypal');
+    const bitcoinDiv = document.querySelector('#bitcoin');
 
     // Set focus on the name field on page load.
     nameField.focus();
@@ -48,6 +53,57 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 shirtColor.options[4].selected = true;
             }
           
+    });
+
+    
+    // Activities section logic starts here
+
+    // This variable will be used to calculate and to show the total cost of selected activities
+    let total = 0;
+
+    activities.addEventListener('change', (e) => {
+       
+        if (e.target.checked) {
+            total += +e.target.dataset.cost;
+            totalCost.textContent = `Total: $${total}`;
+        } else {
+            total = total - +e.target.dataset.cost;
+            totalCost.textContent = `Total: $${total}`;
+        }
+        
+    });
+
+    // Payment section logic starts here
+
+    // Function used to show only the selected payment related fields
+    function showPaymentField(paymentMethod) {
+        document.querySelector(`#${paymentMethod}`).style.display = '';
+    }
+    // Function used to hide other payment method related fields
+    function hidePaymentField(paymentMethod) {
+        document.querySelector(`#${paymentMethod}`).style.display = 'none';
+    }
+
+    // Hide paypal and bitcoin display on load
+    paypalDiv.style.display = 'none';
+    bitcoinDiv.style.display = 'none';
+    // Remove first select option as it is not used (select payment method)
+    paymentMethod.remove(0);
+    // Select credit card as payment option on load
+    paymentMethod.options[0].selected = true;
+    paymentMethod.addEventListener('change', (e) => {
+
+        // Convert the HTML collection to an array-like and Iterate through payment select options to show and hide fields as needed
+        Array.from(e.target.options).forEach(function(option) {
+            let option_value = option.value;
+            if (option.selected) {
+                showPaymentField(option_value);
+            }
+            if (!option.selected) {
+                hidePaymentField(option_value);
+            }
+        })
+
     });
 
 
