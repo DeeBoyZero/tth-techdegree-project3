@@ -1,18 +1,35 @@
 // Wait for the DOM content to be fully loaded
 window.addEventListener('DOMContentLoaded', (event) => {
     const nameField = document.querySelector('#name');
+    const nameHint = document.querySelector('#name-hint');
+    const emailField = document.querySelector('#email');
+    const emailHint= document.querySelector('#email-hint');
     const otherJobField = document.querySelector('#other-job-role');
     const jobRole = document.querySelector('#title');
     const shirtColor = document.querySelector('#color');
     const shirtDesign = document.querySelector('#design');
     const activities = document.querySelector('#activities');
+    const activitiesHint = document.querySelector('#activities-hint');
+    const activitiesCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]');
     const totalCost = document.querySelector('#activities-cost');
     const paymentMethod = document.querySelector('#payment');
     const paypalDiv = document.querySelector('#paypal');
     const bitcoinDiv = document.querySelector('#bitcoin');
+    const form = document.querySelector('form');
+
+    // user for credit card validation
+    const cardNumber = document.querySelector('#cc-num');
+    const cardNumberHint = document.querySelector('#cc-hint');
+    const zipCode = document.querySelector('#zip');
+    const zipHint = document.querySelector('#zip-hint');
+    const ccv = document.querySelector('#cvv');
+    const ccvHint = document.querySelector('#cvv-hint');
+
 
     // Set focus on the name field on page load.
     nameField.focus();
+    // nameField.classList.add('focus');
+
 
     // Job Role Logic
 
@@ -21,7 +38,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     jobRole.addEventListener('change', (e) => {
         if (e.target.value === 'other') {
-            otherJobField.style.display = '';
+            otherJobField.style.display = 'inherit';
         } else {
             otherJobField.style.display = 'none';
         }
@@ -34,7 +51,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     shirtDesign.addEventListener('change', (e) => {
         shirtColor.disabled = false;
-        // const regex = /^([a-zA-Z\s?]+)/g;
         const regex = /^([^\(]+)/g
 
             for (let i = 1; i < shirtColor.length; i++) {
@@ -54,7 +70,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
           
     });
-
     
     // Activities section logic starts here
 
@@ -77,7 +92,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     // Function used to show only the selected payment related fields
     function showPaymentField(paymentMethod) {
-        document.querySelector(`#${paymentMethod}`).style.display = '';
+        document.querySelector(`#${paymentMethod}`).style.display = 'inherit';
     }
     // Function used to hide other payment method related fields
     function hidePaymentField(paymentMethod) {
@@ -103,11 +118,97 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 hidePaymentField(option_value);
             }
         })
+    });
+
+    // Form validation logic starts here
+
+    // Name field validator function
+    function checkName(name) {
+        const regex = /^\s?$/;
+        return regex.test(name)
+    }
+        
+    // Email field validator function ( check for empty string and for format)
+    function checkEmail(email) {
+        const regexEmpty = /^\s?$/;
+        const regexFormat = /^\S+@\S+\.com$/;
+
+        if ( regexEmpty.test(email) ) {
+            emailHint.textContent = 'Email field cannot be blank';
+        } else if ( !regexFormat.test(email) ) {
+            emailHint.textContent = 'Email address must be formatted correctly';
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    // Validate if at least 1 activity is checked(Using a node list returned by document.querySelectorAll)
+    function checkActivites(list) {
+        for ( let i = 0; i < list.length; i++ ) {
+            if ( list[i].checked ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Validate payment information of credit card
+
+    function checkCreditCard(){
+
+    }
+
+    form.addEventListener('submit', (e) => {
+        
+        if (!checkEmail(emailField.value)) {
+            emailHint.style.display = 'none';
+        } else {
+            emailHint.style.display = 'inherit';
+            e.preventDefault();
+        }
+
+        if (!checkName(nameField.value)) {
+            nameHint.style.display = 'none';
+        }   else {
+            nameHint.style.display = 'inherit';
+            e.preventDefault();
+        }
+        
+        if (checkActivites(activitiesCheckboxes)) {
+            activitiesHint.style.display = 'none';
+        } else {
+            activitiesHint.style.display = 'inherit';
+            e.preventDefault();
+        }
+
+        if (paymentMethod.options[0].selected) {
+            
+            if ( /^\d{13,16}$/.test(cardNumber.value) ) {
+                cardNumberHint.style.display = 'none';
+            } else {
+                cardNumberHint.style.display = 'inherit';
+                e.preventDefault();
+            }
+
+            if ( /^\d{5}$/.test(zipCode.value)) {
+                zipHint.style.display = 'none';
+            } else {
+                zipHint.style.display = 'inherit';
+                e.preventDefault();
+            }
+
+            if ( /^\d{3}$/.test(ccv.value)) {
+                ccvHint.style.display = 'none';
+            } else {
+                ccvHint.style.display = 'inherit';
+                e.preventDefault();
+            }
+
+        }
+
 
     });
 
 
 });
-
-
-
