@@ -81,7 +81,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let total = 0;
 
     activities.addEventListener('change', (e) => {
-       
+      
         if (e.target.checked) {
             total += +e.target.dataset.cost;
             totalCost.textContent = `Total: $${total}`;
@@ -105,7 +105,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 e.target.parentElement.classList.remove('disabled');
             }
         }
-        
     });
 
     // Activities accessibility stuff - Make the focus states of the activities more obvious to all users.
