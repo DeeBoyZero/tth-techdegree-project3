@@ -26,7 +26,7 @@ for ( let i = 0; i< activitiesCheckboxes.length; i++ ) {
     }
 }
 ```
-2. Real-time error message has been configured on the credit card number field. It validates the input with a keyup  listener. It adds and remove class as needed and hide or show the hint message.
+2. Real-time error message has been configured on the credit card number field using some helper functions. It validates the input with a keyup  listener. It adds and remove class as needed and hide or show the hint message. 
 ```
 cardNumber.addEventListener('keyup', (e) => {
     if (checkCreditCard({cardnumber: cardNumber.value})) {
@@ -41,7 +41,7 @@ cardNumber.addEventListener('keyup', (e) => {
 }); 
 ```
 
-3. Conditional error message has been set on the email field. The content of the error message will depend on the result of the field validation. **If field is blank** : *Email field cannot be blank*. **If invalid format** : *Email address must be formatted correctly*.
+3. Conditional error message has been set on the email field using some helper functions. The content of the error message will depend on the result of the field validation. **If field is blank** : *Email field cannot be blank*. **If invalid format** : *Email address must be formatted correctly*.
 ```
 if (checkEmailEmpty(emailField.value)) {
     emailHint.textContent = 'Email field cannot be blank';
