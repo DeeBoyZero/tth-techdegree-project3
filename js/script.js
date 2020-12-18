@@ -76,9 +76,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
             total = total - +e.target.dataset.cost;
             totalCost.textContent = `Total: $${total}`;
         }
+
+        // EXTRA CREDIT
+        // Prevent users from registering for conflicting activities
+        for ( let i = 0; i< activitiesCheckboxes.length; i++ ) {
+            if ( activitiesCheckboxes[i].dataset.dayAndTime === e.target.dataset.dayAndTime) {
+                if ( !e.target.checked ) {
+                    activitiesCheckboxes[i].disabled = false;
+                    activitiesCheckboxes[i].parentElement.classList.remove('disabled');
+                } else {
+                    activitiesCheckboxes[i].disabled = true;
+                    activitiesCheckboxes[i].parentElement.classList.add('disabled');
+                }
+                e.target.disabled = false;
+                e.target.parentElement.classList.remove('disabled');
+            }
+        }
         
     });
-
 
     // Activities accessibility stuff
     for (let i = 0; i < activitiesCheckboxes.length; i++) {
@@ -113,6 +128,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
             option.selected = true;
         }
     })
+
+    // EXTRA CREDIT - Real-time error message
+    // Validates the credit card number as the user type it   
+    cardNumber.addEventListener('keyup', (e) => {
+        if (!checkCreditCard({cardnumber: cardNumber.value})) {
+            e.target.parentElement.classList.add('not-valid');
+            e.target.parentElement.classList.remove('valid');
+            e.target.parentElement.lastElementChild.style.display = 'inherit';
+        } else {
+            e.target.parentElement.classList.add('valid');
+            e.target.parentElement.classList.remove('not-valid');
+            e.target.parentElement.lastElementChild.style.display = 'none';
+        }
+    }); 
 
     paymentMethod.addEventListener('change', (e) => {
 
@@ -204,7 +233,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         event.preventDefault();
     }
 
-
     // On submit, calls all the validator functions and show error messages while preventing the submit of the form
     form.addEventListener('submit', (e) => {
 
@@ -232,7 +260,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         // Convert the payment method HTMl collection into an array and only validate fields if credit-card is selected
         Array.from(paymentMethod.options).forEach(function(option) {
-            if (option.value === 'credit-card') {
+            if (option.value === 'credit-card' && option.selected) {
                 if (checkCreditCard({cardnumber: cardNumber.value})) {
                     addValidClass(cardNumber, e);
                 } else {
