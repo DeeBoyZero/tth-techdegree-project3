@@ -111,10 +111,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     for (let i = 0; i < activitiesCheckboxes.length; i++) {
         activitiesCheckboxes[i].addEventListener('focus', (e) => {
             e.target.parentElement.classList.add('focus');
-        })
+        });
         activitiesCheckboxes[i].addEventListener('blur', (e) => {
             e.target.parentElement.classList.remove('focus');
-        })
+        });
     }
 
     /***********************************
@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         if (option.value === 'credit-card') {
             option.selected = true;
         }
-    })
+    });
 
     // EXTRA CREDIT - Real-time error message
     // Validates the credit card number as the user type it   
@@ -265,7 +265,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             emailHint.textContent = 'Email address must be formatted correctly';
             addNotValidClass(emailField, e);
         } else {
-            addValidClass(emailField);
+            addValidClass(emailField, e);
         }
         
         if (checkActivites(activitiesCheckboxes)) {
@@ -295,6 +295,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     addNotValidClass(cvv, e);
                 }
             }
-        })
+        });
     });
 });
