@@ -174,12 +174,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Form validation logic starts here
     ***********************************/
 
-    // Name field validator function
+    // Name field validator function. Check if name field is empty
     function checkName(name) {
         return /^\s*$/.test(name)
     }
         
-    // Email field validator functions (check for empty string and for format)
+    // Email field validator functions (check for empty string and for invalid format)
     function checkEmailEmpty(email) {
         return /^\s?$/.test(email);
     }
