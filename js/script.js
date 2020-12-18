@@ -215,7 +215,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Validates the field and add valid class to its parent / For checkboxes, it adds the class to the fieldset
     function addValidClass(element) {
 
-        // Verify if the element passed is a nodeList () (Ex. I get a notList of Checkboxes in the activity section)
+        // Verify if the element passed is a nodeList () (Ex. I get a nodeList of Checkboxes in the activity section)
         if (NodeList.prototype.isPrototypeOf(element)) {
             const lastChild = element[0].parentElement.parentElement.parentElement.lastElementChild;
             element[0].parentElement.parentElement.parentElement.classList.add('valid');
@@ -233,7 +233,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Validates the field and add not-valid class to its parent when it fails validation and prevent form submission / For checkboxes, it adds the class to the fieldset
     function addNotValidClass(element, event) {
 
-        // Verify if the element passed is a nodeList () (Ex. I get a notList of Checkboxes in the activity section)
+        // Verify if the element passed is a nodeList () (Ex. I get a nodeList of Checkboxes in the activity section)
         if (NodeList.prototype.isPrototypeOf(element)) {
             const lastChild = element[0].parentElement.parentElement.parentElement.lastElementChild;
             element[0].parentElement.parentElement.parentElement.classList.add('not-valid');
