@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     /*****************
     // Job Role Logic
     *****************/
-   
+
     // hide the other job role input by default and show it if other job has been selected
     otherJobField.style.display = 'none';
     
@@ -258,7 +258,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
 
         // EXTRA CREDIT
-        // Conditional error message, 1 for blank field and 1 for valid format
+        // Conditional error message, 1 for blank field and 1 for invalid format
         if (checkEmailEmpty(emailField.value)) {
             emailHint.textContent = 'Email field cannot be blank';
             addNotValidClass(emailField, e);
