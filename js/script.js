@@ -297,7 +297,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
         })
-
     });
-
 });
