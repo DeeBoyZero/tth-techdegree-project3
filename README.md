@@ -11,6 +11,21 @@
 ### Extra credit informations
 
 1. Prevent users from registering for conflicting activities
+```
+for ( let i = 0; i< activitiesCheckboxes.length; i++ ) {
+    if ( activitiesCheckboxes[i].dataset.dayAndTime === e.target.dataset.dayAndTime) {
+        if ( !e.target.checked ) {
+            activitiesCheckboxes[i].disabled = false;
+            activitiesCheckboxes[i].parentElement.classList.remove('disabled');
+        } else {
+            activitiesCheckboxes[i].disabled = true;
+            activitiesCheckboxes[i].parentElement.classList.add('disabled');
+        }
+        e.target.disabled = false;
+        e.target.parentElement.classList.remove('disabled');
+    }
+}
+```
 2. Real-time error message has been configured on the credit card number field. It validates the input with a keyup  listener. It adds and remove class as needed and hide or show the hint message.
 ```
 cardNumber.addEventListener('keyup', (e) => {
