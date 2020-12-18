@@ -26,7 +26,7 @@ for ( let i = 0; i< activitiesCheckboxes.length; i++ ) {
     }
 }
 ```
-2. Real-time error message has been configured on the credit card number field using some helper functions. It validates the input with a keyup  listener. It adds and remove class as needed and hide or show the hint message. 
+2. Real-time error message has been configured on the credit card number field using some helper functions. It validates the input with a keyup  listener. It adds and removes classes as needed and hide or show the hint message. 
 ```
 cardNumber.addEventListener('keyup', (e) => {
     if (checkCreditCard({cardnumber: cardNumber.value})) {
