@@ -1,5 +1,6 @@
 // Wait for the DOM content to be fully loaded
 window.addEventListener('DOMContentLoaded', (event) => {
+    // Global Variables
     const nameField = document.querySelector('#name');
     const nameHint = document.querySelector('#name-hint');
     const emailField = document.querySelector('#email');
@@ -16,14 +17,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const paypalDiv = document.querySelector('#paypal');
     const bitcoinDiv = document.querySelector('#bitcoin');
     const form = document.querySelector('form');
-
-    // user for credit card validation
     const cardNumber = document.querySelector('#cc-num');
     const cardNumberHint = document.querySelector('#cc-hint');
     const zipCode = document.querySelector('#zip');
     const zipHint = document.querySelector('#zip-hint');
-    const ccv = document.querySelector('#cvv');
-    const ccvHint = document.querySelector('#cvv-hint');
+    const cvv = document.querySelector('#cvv');
+    const cvvHint = document.querySelector('#cvv-hint');
 
 
     // Set focus on the name field on page load.
@@ -105,17 +104,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Remove first select option as it is not used (select payment method)
     paymentMethod.remove(0);
     // Select credit card as payment option on load
-    paymentMethod.options[0].selected = true;
+    Array.from(paymentMethod.options).forEach(function(option) {
+        if (option.value === 'credit-card') {
+            option.selected = true;
+        }
+    })
+
     paymentMethod.addEventListener('change', (e) => {
 
         // Convert the HTML collection to an array-like and Iterate through payment select options to show and hide fields as needed
         Array.from(e.target.options).forEach(function(option) {
-            let option_value = option.value;
             if (option.selected) {
-                showPaymentField(option_value);
+                showPaymentField(option.value);
             }
             if (!option.selected) {
-                hidePaymentField(option_value);
+                hidePaymentField(option.value);
             }
         })
     });
@@ -128,19 +131,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         return regex.test(name)
     }
         
-    // Email field validator function ( check for empty string and for format)
-    function checkEmail(email) {
-        const regexEmpty = /^\s?$/;
-        const regexFormat = /^\S+@\S+\.com$/;
+    // Email field validator functions (check for empty string and for format)
+    function checkEmailEmpty(email) {
+        return /^\s?$/.test(email);
+    }
 
-        if ( regexEmpty.test(email) ) {
-            emailHint.textContent = 'Email field cannot be blank';
-        } else if ( !regexFormat.test(email) ) {
-            emailHint.textContent = 'Email address must be formatted correctly';
-        } else {
-            return false;
-        }
-        return true;
+    function checkEmailFormat(email) {
+        return /^\S+@\S+\.com$/.test(email)
     }
 
     // Validate if at least 1 activity is checked(Using a node list returned by document.querySelectorAll)
@@ -153,20 +150,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
         return false;
     }
 
-    // Validate payment information of credit card
+    // Validate payment information of credit card.
+    // Using named arguments so i can use 1 unique fonction for every required credit card field
+    function checkCreditCard({cardnumber,zipcode,cvv} = {}) {
 
-    function checkCreditCard(){
+        if (cardnumber) {
+            return /^\d{13,16}$/.test(cardnumber);
+        } else if (zipcode) {
+            return /^\d{5}$/.test(zipcode);
+        } else if (cvv) {
+            return /^\d{3}$/.test(cvv);
+        }
 
     }
 
+    // On submit, calls all the validator functions and show error messages while preventing the submit of the form
     form.addEventListener('submit', (e) => {
-        
-        if (!checkEmail(emailField.value)) {
-            emailHint.style.display = 'none';
-        } else {
-            emailHint.style.display = 'inherit';
-            e.preventDefault();
-        }
 
         if (!checkName(nameField.value)) {
             nameHint.style.display = 'none';
@@ -174,6 +173,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
             nameHint.style.display = 'inherit';
             e.preventDefault();
         }
+
+        if (checkEmailEmpty(emailField.value)) {
+            emailHint.style.display = 'inherit';
+            emailHint.textContent = 'Email field cannot be blank';
+            e.preventDefault();
+        } else if ( !checkEmailFormat(emailField.value) ) {
+            emailHint.style.display = 'inherit';
+            emailHint.textContent = 'Email address must be formatted correctly';
+            e.preventDefault();
+        } else {
+            emailHint.style.display = 'none';
+        }
+
         
         if (checkActivites(activitiesCheckboxes)) {
             activitiesHint.style.display = 'none';
@@ -182,33 +194,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
             e.preventDefault();
         }
 
-        if (paymentMethod.options[0].selected) {
-            
-            if ( /^\d{13,16}$/.test(cardNumber.value) ) {
-                cardNumberHint.style.display = 'none';
-            } else {
-                cardNumberHint.style.display = 'inherit';
-                e.preventDefault();
+        // Convert the payment method HTMl collection into an array and only validate fields if credit-card is selected
+        Array.from(paymentMethod.options).forEach(function(option) {
+            if (option.value === 'credit-card') {
+                if (checkCreditCard({cardnumber: cardNumber.value})) {
+                    cardNumberHint.style.display = 'none';
+                } else {
+                    cardNumberHint.style.display = 'inherit';
+                    e.preventDefault();
+                }
+    
+                if (checkCreditCard({zipcode: zipCode.value})) {
+                    zipHint.style.display = 'none';
+                } else {
+                    zipHint.style.display = 'inherit';
+                    e.preventDefault();
+                }
+    
+                if (checkCreditCard({cvv: cvv.value})) {
+                    cvvHint.style.display = 'none';
+                } else {
+                    cvvHint.style.display = 'inherit';
+                    e.preventDefault();
+                }
             }
-
-            if ( /^\d{5}$/.test(zipCode.value)) {
-                zipHint.style.display = 'none';
-            } else {
-                zipHint.style.display = 'inherit';
-                e.preventDefault();
-            }
-
-            if ( /^\d{3}$/.test(ccv.value)) {
-                ccvHint.style.display = 'none';
-            } else {
-                ccvHint.style.display = 'inherit';
-                e.preventDefault();
-            }
-
-        }
-
+        })
 
     });
-
 
 });
