@@ -2,7 +2,6 @@
 window.addEventListener('DOMContentLoaded', (event) => {
     // Global Variables
     const nameField = document.querySelector('#name');
-    const nameHint = document.querySelector('#name-hint');
     const emailField = document.querySelector('#email');
     const emailHint= document.querySelector('#email-hint');
     const otherJobField = document.querySelector('#other-job-role');
@@ -10,7 +9,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const shirtColor = document.querySelector('#color');
     const shirtDesign = document.querySelector('#design');
     const activities = document.querySelector('#activities');
-    const activitiesHint = document.querySelector('#activities-hint');
     const activitiesCheckboxes = document.querySelectorAll('#activities input[type="checkbox"]');
     const totalCost = document.querySelector('#activities-cost');
     const paymentMethod = document.querySelector('#payment');
@@ -18,18 +16,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const bitcoinDiv = document.querySelector('#bitcoin');
     const form = document.querySelector('form');
     const cardNumber = document.querySelector('#cc-num');
-    const cardNumberHint = document.querySelector('#cc-hint');
     const zipCode = document.querySelector('#zip');
-    const zipHint = document.querySelector('#zip-hint');
     const cvv = document.querySelector('#cvv');
-    const cvvHint = document.querySelector('#cvv-hint');
-
 
     // Set focus on the name field on page load.
     nameField.focus();
-    // nameField.classList.add('focus');
-
-
+ 
     // Job Role Logic
 
     // hide the other job role input by default and show it if other job has been selected
@@ -86,6 +78,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         
     });
+
+
+    // Activities accessibility stuff
+    for (let i = 0; i < activitiesCheckboxes.length; i++) {
+        activitiesCheckboxes[i].addEventListener('focus', (e) => {
+            e.target.parentElement.classList.add('focus');
+        })
+        activitiesCheckboxes[i].addEventListener('blur', (e) => {
+            e.target.parentElement.classList.remove('focus');
+        })
+    }
+
 
     // Payment section logic starts here
 
@@ -164,58 +168,87 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
+    // Validates the field and add valid class to its parent / For checkboxes, it adds the class to the fieldset
+    function addValidClass(element) {
+
+        // Verify if the element passed is a nodeList () (Ex. I get a notList of Checkboxes in the activity section)
+        if (NodeList.prototype.isPrototypeOf(element)) {
+            const lastChild = element[0].parentElement.parentElement.parentElement.lastElementChild;
+            element[0].parentElement.parentElement.parentElement.classList.add('valid');
+            element[0].parentElement.parentElement.parentElement.classList.remove('not-valid');
+            lastChild.style.display = 'none';
+        } else {
+            const lastChild = element.parentElement.lastElementChild;
+            element.parentElement.classList.add('valid');
+            element.parentElement.classList.remove('not-valid');
+            lastChild.style.display = 'none';
+
+        }
+    }
+
+    // Validates the field and add not-valid class to its parent when it fails validation and prevent form submission / For checkboxes, it adds the class to the fieldset
+    function addNotValidClass(element, event) {
+
+        // Verify if the element passed is a nodeList () (Ex. I get a notList of Checkboxes in the activity section)
+        if (NodeList.prototype.isPrototypeOf(element)) {
+            const lastChild = element[0].parentElement.parentElement.parentElement.lastElementChild;
+            element[0].parentElement.parentElement.parentElement.classList.add('not-valid');
+            element[0].parentElement.parentElement.parentElement.classList.remove('valid');
+            lastChild.style.display = 'inherit'
+        } else {
+            const lastChild = element.parentElement.lastElementChild;
+            element.parentElement.classList.add('not-valid');
+            element.parentElement.classList.remove('valid');
+            lastChild.style.display = 'inherit'
+        }
+        event.preventDefault();
+    }
+
+
     // On submit, calls all the validator functions and show error messages while preventing the submit of the form
     form.addEventListener('submit', (e) => {
 
-        if (!checkName(nameField.value)) {
-            nameHint.style.display = 'none';
+        if (checkName(nameField.value)) {
+            addNotValidClass(nameField, e);
         }   else {
-            nameHint.style.display = 'inherit';
-            e.preventDefault();
+            addValidClass(nameField);
         }
 
         if (checkEmailEmpty(emailField.value)) {
-            emailHint.style.display = 'inherit';
             emailHint.textContent = 'Email field cannot be blank';
-            e.preventDefault();
+            addNotValidClass(emailField, e);
         } else if ( !checkEmailFormat(emailField.value) ) {
-            emailHint.style.display = 'inherit';
             emailHint.textContent = 'Email address must be formatted correctly';
-            e.preventDefault();
+            addNotValidClass(emailField, e);
         } else {
-            emailHint.style.display = 'none';
+            addValidClass(emailField);
         }
-
         
         if (checkActivites(activitiesCheckboxes)) {
-            activitiesHint.style.display = 'none';
+            addValidClass(activitiesCheckboxes, e);
         } else {
-            activitiesHint.style.display = 'inherit';
-            e.preventDefault();
+            addNotValidClass(activitiesCheckboxes, e);
         }
 
         // Convert the payment method HTMl collection into an array and only validate fields if credit-card is selected
         Array.from(paymentMethod.options).forEach(function(option) {
             if (option.value === 'credit-card') {
                 if (checkCreditCard({cardnumber: cardNumber.value})) {
-                    cardNumberHint.style.display = 'none';
+                    addValidClass(cardNumber, e);
                 } else {
-                    cardNumberHint.style.display = 'inherit';
-                    e.preventDefault();
+                    addNotValidClass(cardNumber, e);
                 }
     
                 if (checkCreditCard({zipcode: zipCode.value})) {
-                    zipHint.style.display = 'none';
+                    addValidClass(zipCode, e);
                 } else {
-                    zipHint.style.display = 'inherit';
-                    e.preventDefault();
+                    addNotValidClass(zipCode, e);
                 }
     
                 if (checkCreditCard({cvv: cvv.value})) {
-                    cvvHint.style.display = 'none';
+                    addValidClass(cvv, e);
                 } else {
-                    cvvHint.style.display = 'inherit';
-                    e.preventDefault();
+                    addNotValidClass(cvv, e);
                 }
             }
         })
