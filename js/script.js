@@ -32,6 +32,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     /*****************
     // Job Role Logic
     *****************/
+   
     // hide the other job role input by default and show it if other job has been selected
     otherJobField.style.display = 'none';
     
@@ -107,7 +108,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         
     });
 
-    // Activities accessibility stuff
+    // Activities accessibility stuff - Make the focus states of the activities more obvious to all users.
     for (let i = 0; i < activitiesCheckboxes.length; i++) {
         activitiesCheckboxes[i].addEventListener('focus', (e) => {
             e.target.parentElement.classList.add('focus');
