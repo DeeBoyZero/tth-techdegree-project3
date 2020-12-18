@@ -1,5 +1,12 @@
+/*************************
+Treehouse Unit 3 project
+Form validation
+Author:  Mathieu Desilets
+*************************/
+
 // Wait for the DOM content to be fully loaded
 window.addEventListener('DOMContentLoaded', (event) => {
+    
     // Global Variables
     const nameField = document.querySelector('#name');
     const emailField = document.querySelector('#email');
@@ -22,8 +29,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Set focus on the name field on page load.
     nameField.focus();
  
+    /*****************
     // Job Role Logic
-
+    *****************/
     // hide the other job role input by default and show it if other job has been selected
     otherJobField.style.display = 'none';
     
@@ -35,7 +43,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
+    /********************** 
     // Shirt Section logic
+    **********************/
 
     // Disable the color select on load and make it available when the design has been selected
     shirtColor.disabled = true;
@@ -62,7 +72,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
           
     });
     
+    /************************************** 
     // Activities section logic starts here
+    **************************************/
 
     // This variable will be used to calculate and to show the total cost of selected activities
     let total = 0;
@@ -105,8 +117,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         })
     }
 
-
+    /***********************************
     // Payment section logic starts here
+    ***********************************/
 
     // Function used to show only the selected payment related fields
     function showPaymentField(paymentMethod) {
@@ -132,14 +145,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // EXTRA CREDIT - Real-time error message
     // Validates the credit card number as the user type it   
     cardNumber.addEventListener('keyup', (e) => {
-        if (!checkCreditCard({cardnumber: cardNumber.value})) {
-            e.target.parentElement.classList.add('not-valid');
-            e.target.parentElement.classList.remove('valid');
-            e.target.parentElement.lastElementChild.style.display = 'inherit';
-        } else {
+        if (checkCreditCard({cardnumber: cardNumber.value})) {
             e.target.parentElement.classList.add('valid');
             e.target.parentElement.classList.remove('not-valid');
             e.target.parentElement.lastElementChild.style.display = 'none';
+        } else {
+            e.target.parentElement.classList.add('not-valid');
+            e.target.parentElement.classList.remove('valid');
+            e.target.parentElement.lastElementChild.style.display = 'inherit';
         }
     }); 
 
@@ -156,12 +169,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         })
     });
 
+    /***********************************
     // Form validation logic starts here
+    ***********************************/
 
     // Name field validator function
     function checkName(name) {
-        const regex = /^\s?$/;
-        return regex.test(name)
+        return /^\s*$/.test(name)
     }
         
     // Email field validator functions (check for empty string and for format)
@@ -242,6 +256,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             addValidClass(nameField);
         }
 
+        // EXTRA CREDIT
+        // Conditional error message, 1 for blank field and 1 for valid format
         if (checkEmailEmpty(emailField.value)) {
             emailHint.textContent = 'Email field cannot be blank';
             addNotValidClass(emailField, e);
