@@ -1,7 +1,8 @@
-# tth-techdegree-project3
+# Team Treehouse FSJS unit 3 project
 ## by Mathieu Desilets
 
- 
+## A simple form validation app
+
 ### Techno used
 - HTML
 - CSS
